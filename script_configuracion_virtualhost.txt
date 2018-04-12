@@ -1,0 +1,27 @@
+---creacion de virtual host---
+cd /etc/apache2/sites-available/
+cp 000-default.conf examen2.conf
+nano examen2.conf
+a2ensite examen2.conf
+cd /var/www/
+mkdir jmartinez-org
+nano /etc/apache2/mods-enabled/dir.conf
+nano dir.conf
+service apache2 reload
+nano /etc/hosts
+service apache2 reload
+----certificados ssl--------
+cd /home/jhonatan/Documentos
+openssl genrsa -out server.key 4096
+openssl req -new -days 365 -key server.key -out server.csr
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+mv server.key /etc/ssl/private/
+mv server.crt /etc/ssl/certs/
+chmod 664 /etc/ssl/certs/server.crt
+chmod 640 /etc/ssl/private/server.key
+cd /etc/apache2/sites-available/
+cp default-ssl.conf examen2-ssl.conf
+nano examen2-ssl.conf
+a2ensite examen2-ssl.conf
+a2enmod ssl
+systemctl restart apache2
